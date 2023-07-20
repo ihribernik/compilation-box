@@ -1,7 +1,0 @@
-fastapi[all]
-motor
-# dev deps
-black
-pylance
-pylint
-flake8

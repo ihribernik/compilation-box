@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "compilation-box"
+version = "0.1.0"
+description = ""
+authors = ["Ivan Hribernik <cihribernik@gmail.com>"]
+readme = "README.md"
+packages = [{include = "compilation_box"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["all"], version = "^0.100.0"}
+motor = "^3.2.0"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.6"
+utils = "^1.0.1"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+pylance = "^0.5.8"
+pylint = "^2.17.4"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
