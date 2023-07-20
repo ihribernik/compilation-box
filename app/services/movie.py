@@ -1,36 +1,28 @@
-from motor.motor_asyncio import AsyncIOMotorClient
-
-from app.services.database import BaseCrud
+from app.models import Movie
 
 
-class MovieCrud(BaseCrud):
-    def __init__(
-        self, connection: AsyncIOMotorClient, db: str, collection: str
-    ) -> None:
-        self.connection = connection
-        self.db = self.connection[db]
-        self.collection = self.db[collection]
+class MovieCrud:
+    async def add_movie(self, movie: Movie):
+        new_movie = Movie(title=movie.title, release_date=movie.release_date)
+        await new_movie.create()
 
-    async def add_movie(self):
-        ...
-
-    async def delete_movie(self) -> bool:
-        row = await self.collection.find_one({})
+    async def delete_movie(self, title: str):
+        row = await Movie.find_one(Movie.title == title)
         if row:
-            result = await self.collection.delete_one({})
-            if result.deleted_count > 0:
-                return True
-            else:
-                return False
-        return False
+            await row.delete({})
 
-    async def get_movie(self):
-        row = await self.collection.find_one()
-        return row
+    async def get_movie_by_title(self, title):
+        return await Movie.find_one(Movie.title == title)
 
-    async def get_movies(self):
-        rows = await self.collection.find()
+    @classmethod
+    async def get_movies(cls):
+        rows = await Movie.find_all().to_list()
         return rows
 
-    async def update_movie(self):
-        ...
+    async def update_movie(self, movie: Movie):
+        row = await Movie.find_one(Movie.title == movie.title)
+
+        if row:
+            row.title = movie.title
+            row.release_date = movie.release_date
+            await row.save(Movie)
