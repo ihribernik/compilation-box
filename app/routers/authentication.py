@@ -2,16 +2,16 @@ from typing import Annotated
 
 import bcrypt
 from fastapi import APIRouter, Body
-from models.models import User
+from app.models import User
 from pydantic import BaseModel, EmailStr
-from utils.security import create_token
+from app.utils.security import create_token
 
 from app.utils.constants import (
     LOGIN_ERROR,
 )
 
 router = APIRouter(
-    prefix="auth",
+    prefix="/auth",
     tags=["auth"],
     # dependencies=[Depends(get_token_header)],
     responses={404: {"description": "Not found"}},

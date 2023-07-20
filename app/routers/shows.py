@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 router = APIRouter(
-    prefix="show",
+    prefix="/show",
     tags=["show"],
     # dependencies=[Depends(get_token_header)],
     responses={404: {"description": "Not found"}},

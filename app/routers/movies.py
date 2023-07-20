@@ -1,7 +1,8 @@
 from fastapi import APIRouter
+from app.services.movie import MovieCrud
 
 router = APIRouter(
-    prefix="movie",
+    prefix="/movie",
     tags=["movie"],
     # dependencies=[Depends(get_token_header)],
     responses={404: {"description": "Not found"}},
@@ -10,7 +11,7 @@ router = APIRouter(
 
 @router.get("/")
 async def getMovies():
-    ...
+    return await MovieCrud.get_movies()
 
 
 @router.get("/{id}")
