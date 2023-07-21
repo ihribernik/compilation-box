@@ -1,4 +1,6 @@
 from fastapi import APIRouter
+
+from app.models.movie import MovieCreate, MovieUpdate
 from app.services.movie import MovieCrud
 
 router = APIRouter(
@@ -11,24 +13,24 @@ router = APIRouter(
 
 @router.get("/")
 async def getMovies():
-    return await MovieCrud.get_movies()
+    return await MovieCrud.get_all()
 
 
-@router.get("/{id}")
-async def getMovie(id: int):
-    ...
+@router.get("/{movie_id}")
+async def getMovie(movie_id: str):
+    return await MovieCrud.get_by_id(_id=movie_id)
 
 
 @router.post("/")
-async def addMovie():
-    ...
+async def addMovie(body: MovieCreate):
+    return await MovieCrud.add(movie=body)
 
 
-@router.delete("/{id}")
-async def deleteMovie(id: int):
-    ...
+@router.delete("/{movie_id}")
+async def deleteMovie(movie_id: str):
+    return await MovieCrud.delete(_id=movie_id)
 
 
-@router.patch("/{id}")
-async def updateMovie(id: int):
-    ...
+@router.patch("/{movie_id}")
+async def updateMovie(movie_id: str, body: MovieUpdate):
+    return await MovieCrud.update(_id=movie_id, movie=body)

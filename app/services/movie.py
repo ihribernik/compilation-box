@@ -1,28 +1,44 @@
+from fastapi import HTTPException
 from app.models import Movie
+from app.models.movie import MovieCreate, MovieUpdate
 
 
 class MovieCrud:
-    async def add_movie(self, movie: Movie):
-        new_movie = Movie(title=movie.title, release_date=movie.release_date)
-        await new_movie.create()
-
-    async def delete_movie(self, title: str):
-        row = await Movie.find_one(Movie.title == title)
-        if row:
-            await row.delete({})
-
-    async def get_movie_by_title(self, title):
-        return await Movie.find_one(Movie.title == title)
+    @classmethod
+    async def add(cls, movie: MovieCreate):
+        new_movie = Movie(
+            title=movie.title,
+            release_date=movie.release_date,
+        )
+        return await new_movie.create()
 
     @classmethod
-    async def get_movies(cls):
-        rows = await Movie.find_all().to_list()
-        return rows
+    async def delete(cls, _id: str):
+        movie = await Movie.get(_id)
 
-    async def update_movie(self, movie: Movie):
-        row = await Movie.find_one(Movie.title == movie.title)
+        if not movie:
+            raise HTTPException(status_code=404, detail="Movie not found")
 
-        if row:
-            row.title = movie.title
-            row.release_date = movie.release_date
-            await row.save(Movie)
+        result = await movie.delete()
+        return result.raw_result
+
+    @classmethod
+    async def get_by_id(cls, _id: str):
+        movie = await Movie.get(_id)
+
+        if not movie:
+            raise HTTPException(status_code=404, detail="Movie not found")
+
+        return movie
+
+    @classmethod
+    async def get_all(cls):
+        return await Movie.find_all().to_list()
+
+    @classmethod
+    async def update(cls, _id: str, movie: MovieUpdate):
+        row = await Movie.get(_id)
+        if not row:
+            raise HTTPException(status_code=404, detail="Movie not found")
+        body_values = movie.model_dump(exclude_unset=True)
+        return await row.set(body_values)
