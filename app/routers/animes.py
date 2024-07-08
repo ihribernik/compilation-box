@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
-from app.models.movie import MovieCreate, MovieUpdate
-from app.services.movie import MovieCrud
+# from app.models.anime import MovieCreate, MovieUpdate
+# from app.services.movie import MovieCrud
 
 router = APIRouter(
     prefix="/movie",
