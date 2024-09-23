@@ -1,7 +1,7 @@
 import datetime
 
 from beanie import Document
-from pydantic import Field, HttpUrl
+from pydantic import HttpUrl
 
 
 class Episode(Document):

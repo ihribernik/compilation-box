@@ -3,6 +3,7 @@ import json
 import logging
 import time
 from pprint import pprint
+from typing import Dict, List
 from urllib.parse import urljoin
 
 import requests
@@ -30,7 +31,9 @@ class Command:
 
     @staticmethod
     def process_page(elements: list, url_location: str) -> list:
-        """process the current page and return a dict with page an anime list"""
+        """
+        process the current page and return a dict with page an anime list
+        """
 
         anime_list = [
             {
@@ -55,7 +58,10 @@ class Command:
     def fetch_page(url_location: str, page_index: int) -> BeautifulSoup:
         """get the page by url or throw an exception"""
 
-        response = requests.get(f"{url_location}/page/{page_index}", timeout=500)
+        response = requests.get(
+            url=f"{url_location}/page/{page_index}",
+            timeout=500,
+        )
 
         if response.status_code != 200:
             raise NotFoundException(
@@ -82,7 +88,10 @@ class Command:
         base_url = "http://" + self.url_location
         page_structure = self.get_page_structure(self.file_location)
         page = self.fetch_page(base_url, page_index=1)
-        elements, current_page, last_page = self.parse_titles_page(page, page_structure)
+        elements, current_page, last_page = self.parse_titles_page(
+            page,
+            page_structure,
+        )
         tags = self.get_tags(page, page_structure)
 
         for tag in tags:
@@ -92,6 +101,9 @@ class Command:
         anime_list = self.get_anime_list(
             base_url, page_structure, elements, current_page, last_page
         )
+
+        for anime in anime_list:
+            print(anime)
 
     def get_anime_list(
         self, base_url, page_structure, elements, current_page, last_page
@@ -105,7 +117,7 @@ class Command:
 
             page = self.fetch_page(base_url, page_index + 1)
 
-            elements, current_page, last_page = self.parse_titles_page(
+            elements, _current_page, last_page = self.parse_titles_page(
                 page, page_structure
             )
 
@@ -115,7 +127,7 @@ class Command:
             time.sleep(10)
         return anime_list
 
-    def get_page_structure(self, file_path) -> dict:
+    def get_page_structure(self, file_path: str) -> dict:
         """get the page structure from a json file"""
 
         with open(file=file_path, mode="r", encoding="utf-8") as file:
@@ -127,9 +139,9 @@ class Command:
         for anime in animes:
             pprint(anime)
             for anime_page in anime["animes"]:
-                anime_page["genre"] = Genre.objects.get_or_create(name=anime["genre"])[
-                    0
-                ]
+                genre = anime["genre"]
+                genre_obj = Genre.objects.get_or_create(name=genre)
+                anime_page["genre"] = genre_obj[0]
                 anime = Anime(**anime_page)
                 await anime.create()
 
