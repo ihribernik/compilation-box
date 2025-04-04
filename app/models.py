@@ -29,8 +29,8 @@ class Studio(Document):
 
 
 class RoleEnum(str, Enum):
-    actor = "actor"
-    director = "director"
+    ACTOR = "actor"
+    DIRECTOR = "director"
 
 
 class Role(Document):

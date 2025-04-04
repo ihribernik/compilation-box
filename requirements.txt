@@ -1,9 +1,9 @@
-fastapi[standard] == 0.99.1
+fastapi[standard] == 0.115.12
 motor == 3.2.0
 python-jose[cryptography] == 3.3.0
 passlib[bcrypt] == 1.7.4
-python-multipart == 0.0.6
-beanie == 1.20.0
+python-multipart == 0.0.18
+beanie == 1.29.0
 requests == 2.32.3
 beautifulsoup4 == 4.12.3
 pydantic-settings==2.8.1

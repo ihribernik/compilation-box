@@ -5,7 +5,7 @@ from app.core.logger import logger
 from app.core.config import settings
 
 
-async def init():
+async def init_db():
     # Create Motor client
     try:
         client = AsyncIOMotorClient(settings.MONGO_URL)
