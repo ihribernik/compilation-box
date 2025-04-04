@@ -5,7 +5,8 @@ from fastapi import APIRouter, Body, HTTPException, status
 from pydantic import BaseModel, EmailStr
 
 from app.models import User
-from app.utils.security import ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
+from app.core.security import create_access_token
+from app.core.config import settings
 
 router = APIRouter(
     prefix="/auth",
@@ -36,7 +37,9 @@ async def signIn(body: Annotated[RequestBody, Body()]):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+    )
     access_token = create_access_token(
         data={"sub": user.username},
         expires_delta=access_token_expires,

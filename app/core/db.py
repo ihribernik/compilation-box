@@ -1,17 +1,17 @@
 from beanie import init_beanie
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import ServerSelectionTimeoutError
-from app.utils.constants import DB_NAME, MONGO_URL
-from app.utils.logger import logger
+from app.core.logger import logger
+from app.core.config import settings
 
 
 async def init():
     # Create Motor client
     try:
-        client = AsyncIOMotorClient(MONGO_URL)
+        client = AsyncIOMotorClient(settings.MONGO_URL)
 
         await init_beanie(
-            database=client[DB_NAME],
+            database=client[settings.MONGO_DB],
             document_models=[
                 "app.models.Anime",
                 "app.models.Employee",
@@ -24,7 +24,7 @@ async def init():
         )
 
     except ServerSelectionTimeoutError as exc:
-        logger.error(f"MSG: %s", exc)
+        logger.error("MSG: %s", exc)
 
     except Exception as exc1:
-        logger.error(f"MSG: %s", exc1)
+        logger.error("MSG: %s", exc1)
