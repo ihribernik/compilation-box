@@ -1,7 +1,5 @@
 from fastapi import APIRouter
-from app.services.anime import AnimeCrud
-
-# from app.models.anime import MovieCreate, MovieUpdate
+from app.models import Anime
 
 router = APIRouter(
     prefix="/movie",
@@ -12,25 +10,31 @@ router = APIRouter(
 
 
 @router.get("/")
-async def getMovies():
-    return await AnimeCrud.get()
+def get_movies():
+    return Anime.find_all()
 
 
 @router.get("/{movie_id}")
-async def getMovie(movie_id: str):
-    return await AnimeCrud.get()
+async def get_movie(movie_id: str):
+    return await Anime.find_one({})
 
 
 @router.post("/")
-async def addMovie(body):
-    return await AnimeCrud.add()
+async def add_movie(body):
+    anime = Anime({})
+    await anime.save()
+    return anime
 
 
 @router.delete("/{movie_id}")
-async def deleteMovie(movie_id: str):
-    return await AnimeCrud.delete("")
+async def delete_movie(movie_id: str):
+    anime = Anime.find()
+    anime.delete()
+    return True
 
 
 @router.patch("/{movie_id}")
-async def updateMovie(movie_id: str, body: dict):
-    return await AnimeCrud.update()
+async def update_movie(movie_id: str, body: dict):
+    anime = Anime.find({})
+    anime.update({})
+    return anime
