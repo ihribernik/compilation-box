@@ -1,7 +1,5 @@
-from app.services import movie
-from app.services import show
+from app.services import anime
 
 __all__ = [
-    "movie",
-    "show",
+    "anime",
 ]

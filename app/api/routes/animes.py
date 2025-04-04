@@ -13,24 +13,24 @@ router = APIRouter(
 
 @router.get("/")
 async def getMovies():
-    return await AnimeCrud.get_all()
+    return await AnimeCrud.get()
 
 
 @router.get("/{movie_id}")
 async def getMovie(movie_id: str):
-    return await AnimeCrud.get_by_id(_id=movie_id)
+    return await AnimeCrud.get()
 
 
 @router.post("/")
-async def addMovie(body: MovieCreate):
-    return await AnimeCrud.add(movie=body)
+async def addMovie(body):
+    return await AnimeCrud.add()
 
 
 @router.delete("/{movie_id}")
 async def deleteMovie(movie_id: str):
-    return await AnimeCrud.delete(_id=movie_id)
+    return await AnimeCrud.delete("")
 
 
 @router.patch("/{movie_id}")
-async def updateMovie(movie_id: str, body: MovieUpdate):
-    return await AnimeCrud.update(_id=movie_id, movie=body)
+async def updateMovie(movie_id: str, body: dict):
+    return await AnimeCrud.update()

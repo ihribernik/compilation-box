@@ -8,6 +8,7 @@ Returns:
     _type_: _description_
 """
 
+from pathlib import Path
 import secrets
 import warnings
 from typing import Annotated, Any, Literal
@@ -27,14 +28,17 @@ from typing_extensions import Self
 def parse_cors(v: Any) -> list[str] | str:
     if isinstance(v, str) and not v.startswith("["):
         return [i.strip() for i in v.split(",")]
-    elif isinstance(v, list | str):
+    if isinstance(v, list | str):
         return v
     raise ValueError(v)
 
 
+env_file = Path.cwd() / ".env"
+
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", env_ignore_empty=True, extra="ignore"
+        env_file=env_file.as_posix(), env_ignore_empty=True, extra="ignore"
     )
     API_V1_STR: str = "/api/v1"
     SECRET_KEY: str = secrets.token_urlsafe(32)
@@ -51,8 +55,9 @@ class Settings(BaseSettings):
             return f"http://{self.DOMAIN}"
         return f"https://{self.DOMAIN}"
 
-    BACKEND_CORS_ORIGINS: Annotated[list[AnyUrl] | str,
-                                    BeforeValidator(parse_cors)] = ([])
+    BACKEND_CORS_ORIGINS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = (
+        []
+    )
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
