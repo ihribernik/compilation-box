@@ -1,27 +1,39 @@
+import asyncio
+from contextlib import asynccontextmanager
+
 from beanie import init_beanie
+from fastapi import FastAPI
 from motor.motor_asyncio import AsyncIOMotorClient
 from pymongo.errors import ServerSelectionTimeoutError
-from app.core.logger import logger
+
 from app.core.config import settings
+from app.core.logger import logger
+from app.models import Anime, Employee, Episode, Genre, Studio, Role, User
 
 
-async def init_db():
-    # Create Motor client
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     try:
-        client = AsyncIOMotorClient(settings.MONGO_URL)
+        logger.info("Conectando a Mongo...")
+        logger.info("URL: %s", settings.MONGO_URL)
+        logger.info("DB:%s", settings.MONGO_DB)
 
+        app.db = AsyncIOMotorClient(settings.MONGO_URL)
         await init_beanie(
-            database=client[settings.MONGO_DB],
+            database=app.db[settings.MONGO_DB],
             document_models=[
-                "app.models.Anime",
-                "app.models.Employee",
-                "app.models.Episode",
-                "app.models.Genre",
-                "app.models.Studio",
-                "app.models.Role",
-                "app.models.User",
+                Anime,
+                Employee,
+                Episode,
+                Genre,
+                Studio,
+                Role,
+                User,
             ],
         )
+        logger.info("Startup complete")
+        yield
+        logger.info("Shutdown complete")
 
     except ServerSelectionTimeoutError as exc:
         logger.error("MSG: %s", exc)

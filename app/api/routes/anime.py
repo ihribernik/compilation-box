@@ -2,25 +2,28 @@ from fastapi import APIRouter
 from app.models import Anime
 
 router = APIRouter(
-    prefix="/movie",
-    tags=["movie"],
+    prefix="/anime",
+    tags=["anime"],
     # dependencies=[Depends(get_token_header)],
     responses={404: {"description": "Not found"}},
 )
 
 
 @router.get("/")
-def get_movies():
-    return Anime.find_all()
+async def get_movies():
+    animes = Anime.find_all(limit=100)
+    animes = await animes.to_list()
+    return animes
 
 
 @router.get("/{movie_id}")
 async def get_movie(movie_id: str):
-    return await Anime.find_one({})
+    anime = await Anime.find_one()
+    return anime
 
 
 @router.post("/")
-async def add_movie(body):
+async def add_movie():
     anime = Anime({})
     await anime.save()
     return anime
@@ -33,7 +36,7 @@ async def delete_movie(movie_id: str):
     return True
 
 
-@router.patch("/{movie_id}")
+@router.put("/{movie_id}")
 async def update_movie(movie_id: str, body: dict):
     anime = Anime.find({})
     anime.update({})

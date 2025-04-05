@@ -61,7 +61,7 @@ class Settings(BaseSettings):
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
-    MONGO_URL: MongoDsn
+    MONGO_URL: str
     MONGO_DB: str
 
     SMTP_TLS: bool = True

@@ -43,6 +43,10 @@ class Genre(Document):
     description: str
 
 
+class GenreCreta(Genre):
+    pass
+
+
 class Employee(Document):
     """Employee base model"""
 
